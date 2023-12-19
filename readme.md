@@ -7,10 +7,14 @@
 - 支持SWD接口
 - 支持虚拟串口
 - 仅支持winusb通讯
+- 仅支持5V电压下工作
 
 ## 硬件说明
 
+参考 wanfang 的开源工程[https://oshwhub.com/wanfang/ch552g-fang-zhen-qi](https://oshwhub.com/wanfang/ch552g-fang-zhen-qi)
+或者 梁山派 daplink 的开源工程[https://oshwhub.com/lengyuefeng/a7c57e6d86bd47789178df3fda9219dc](https://oshwhub.com/lengyuefeng/a7c57e6d86bd47789178df3fda9219dc)
 
+![原理图](image/原理图.png)
 
 ## 软件说明
 
@@ -18,28 +22,30 @@
 
 ## 文件说明
 
-DAP
-│  CH552.H		 //标准头文件
-│  DAP.c			 //DAP源码
-│  DAP.h			 //DAP头文件
-│  Debug.c		 //芯片配置
-│  Debug.h		 //芯片配置头文件
-│  main.c	     //主程序与USB中断服务函数
+```
+C:.
+│  CH552.H      //芯片头文件
+│  DAP.c        //DAP源码
+│  DAP.h        //DAP头文件
+│  Debug.c      //芯片配置
+│  Debug.h      //芯片配置头文件
+│  main.c       //主程序与USB中断服务函数
 │  readme.md
-│  SW_DP.c		 //SWD源码
-│  Uart.c		   //串口
-│  Uart.h		   //串口头文件
-├─firmware		 //固件
-│      CH55x_DAPLink.hex.hex	
-├─image	       //图片
-├─KEIL	
-│  │  CH55x_DAPLink.uvproj	//keil4工程文件
-│ 
-│
-└─tool
-        CMSIS_DAP.dll		//5.28winusb无法识别补丁
-        keil4.exe			     //keil4安装包
-        WCHISPTool_Setup.exe//下载工具
+│  SW_DP.c      //SDW源码
+│  Uart.c       //串口
+│  Uart.h       //串口头文件
+│  
+├─firmware      //固件可直接烧录
+│      CH55x_DAPLink.hex
+│      
+├─image         //原理图
+│      原理图.png
+│      
+└─tool          //可能使用的工具
+        CMSIS_DAP.dll   //5.28winusb无法识别补丁
+        keil4.exe       //keil4安装包
+        WCHISPTool_Setup.exe    //下载工具
+```
 
 ## 鸣谢
 

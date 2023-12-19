@@ -1,11 +1,12 @@
 ## 代码来源
 
-基于梁山派 [daplink]() 改了串口的代码，修复了原版串口数据偶尔异常的问题，把原版一直闪烁的led灯改为了串口指示灯。其中串口的代码来源于 abgelehnt 的[Tiny-DAPLink](https://github.com/abgelehnt/Tiny-DAPLink)
+基于梁山派 [daplink]() 改了串口的代码，修复了原版串口数据偶尔异常的问题，把原版一直闪烁的led灯改为了串口有数据传输时闪烁，同时把原版固定序列号改为了使用芯片唯一id作为usb序列号。其中串口和usb序列号的代码来源于 abgelehnt 的[Tiny-DAPLink](https://github.com/abgelehnt/Tiny-DAPLink)
 
 ## 功能说明
 
 - 支持SWD接口
 - 支持虚拟串口
+- 支持多个daplink同时使用
 - 仅支持winusb通讯
 - 仅支持5V电压下工作
 

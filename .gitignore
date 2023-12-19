@@ -1,0 +1,15 @@
+KEIL/Listings/
+KEIL/Objects/
+
+.vs/
+__vm/
+*.vcxproj*
+.vscode/
+
+
+# Ignore docs build (Sphinx)
+docs/build
+docs/source/_build
+
+# Test log files
+*.log

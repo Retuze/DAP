@@ -326,15 +326,67 @@ UINT8C i_Interface[] =
     '2', 0
     #endif
 };
+#define HEX_TO_ASCII(target,x) if((x)<10){(target)=(x)+'0';}else{(target)=(x)+'A'-10;}
+/*×Ö·û´®ÃèÊö·û ÂÔ*/
+// ÓïÑÔÃèÊö·û
+UINT8C MyLangDescr[] = {0x04, 0x03, 0x09, 0x04};
 
-code const UINT8C* StringDescs[] = {	
-	LangDesc,		//[0]
-	i_Manufacturer,	//[1]
-	i_Product,		//[2]
-	i_SerialNumber,	//[3]
-    i_Interface,    //[4]
-    i_CdcString,    //[5]
+// ³§¼ÒÐÅÏ¢:ARM
+UINT8C MyManuInfo[] = {0x08, 0x03, 'A', 0x00, 'R', 0x00, 'M', 0x00};
+
+// ²úÆ·ÐÅÏ¢: DAPLink CMSIS-DAP
+UINT8C MyProdInfo[] =
+{
+    36,
+    0x03,
+    'D', 0, 'A', 0, 'P', 0, 'L', 0, 'i', 0, 'n', 0, 'k', 0, ' ', 0,
+    'C', 0, 'M', 0, 'S', 0, 'I', 0, 'S', 0, '-', 0, 'D', 0, 'A', 0,
+    'P', 0
 };
+
+// Éè±¸ÐòÁÐºÅ
+UINT8X SerNumber[] =
+{
+    0x12,
+    0x03,
+    '0', 0, '0', 0, '0', 0, '0', 0, '0', 0, '0', 0, '0', 0, '0', 0,
+};
+
+// ½Ó¿Ú: CMSIS-DAP v2
+UINT8C MyInterface[] =
+{
+    26,
+    0x03,
+    'C', 0, 'M', 0, 'S', 0, 'I', 0, 'S', 0, '-', 0, 'D', 0, 'A', 0,
+    'P', 0, ' ', 0, 'v', 0, '2', 0
+};
+
+// ½Ó¿Ú£ºUSB-CDC
+UINT8C CDC_String[] =
+{
+    30,
+    0x03,
+    'D', 0, 'A', 0, 'P', 0, 'L', 0, 'i', 0, 'n', 0, 'k', 0, '-', 0,
+	'C', 0, 'D', 0, 'C', 0, 'E', 0, 'x', 0, 't', 0
+};
+
+// ½Ó¿Ú£ºDAPLink-Keyboard
+UINT8C Keyboard_String[] =
+{
+    34,
+    0x03,
+    'D', 0, 'A', 0, 'P', 0, 'L', 0, 'i', 0, 'n', 0, 'k', 0, '-', 0,
+	'K', 0, 'e', 0, 'y', 0, 'b', 0, 'o', 0, 'a', 0, 'r', 0, 'd', 0
+};
+
+// code const UINT8C* StringDescs[] = {	
+// 	LangDesc,		//[0]
+// 	i_Manufacturer,	//[1]
+// 	i_Product,		//[2]
+// 	i_SerialNumber,	//[3]
+//     i_Interface,    //[4]
+//     i_CdcString,    //[5]
+// };
 
 UINT8C USB_BOSDescriptor[] =
 {
@@ -503,16 +555,51 @@ void DeviceInterrupt(void) interrupt INT_NO_USB using 1 // USBÖÐ¶Ï·þÎñ³ÌÐò,Ê¹ÓÃ¼
                             // printf("CfgDesc len:%d\r\n",(UINT16)len);
                             break;
                         case 3: // ×Ö·û´®ÃèÊö·û
-                            if (UsbSetupBuf->wValueL < (sizeof(StringDescs)/sizeof(StringDescs[0])))
-                            {
-                                pDescr = (UINT8C *)(StringDescs[UsbSetupBuf->wValueL]);
-                                len = pDescr[0];
-                            }
-                            else
-                            {
-                                len = 0xFF;	//²»Ö§³ÖµÄÀàÐÍ
-                            }
-                            break;
+                            switch (UsbSetupBuf->wValueL)
+								{
+									case 0:
+										pDescr = (PUINT8)(&MyLangDescr[0]);
+										len = sizeof(MyLangDescr);
+										break;
+									case 1:
+										pDescr = (PUINT8)(&MyManuInfo[0]);
+										len = sizeof(MyManuInfo);
+										break;
+									case 2:
+										pDescr = (PUINT8)(&MyProdInfo[0]);
+										len = sizeof(MyProdInfo);
+										break;
+									case 3:
+										HEX_TO_ASCII(SerNumber[2],*(UINT8C *)(0x3FFC)/16);
+										HEX_TO_ASCII(SerNumber[4],*(UINT8C *)(0x3FFC)%16);
+										HEX_TO_ASCII(SerNumber[6],*(UINT8C *)(0x3FFD)/16);
+										HEX_TO_ASCII(SerNumber[8],*(UINT8C *)(0x3FFD)%16);
+
+										HEX_TO_ASCII(SerNumber[10],*(UINT8C *)(0x3FFE)/16);
+										HEX_TO_ASCII(SerNumber[12],*(UINT8C *)(0x3FFE)%16);
+										HEX_TO_ASCII(SerNumber[14],*(UINT8C *)(0x3FFF)/16);
+										HEX_TO_ASCII(SerNumber[16],*(UINT8C *)(0x3FFF)%16);
+
+										pDescr = SerNumber;
+										len = sizeof(SerNumber);
+										break;
+									case 4:
+										pDescr = (PUINT8)(&MyInterface[0]);
+										len = sizeof(MyInterface);
+										break;
+									case 5:
+										pDescr = (PUINT8)(&CDC_String[0]);
+										len = sizeof(CDC_String);
+										break;
+									case 6:
+										pDescr = (PUINT8)(&Keyboard_String[0]);
+										len = sizeof(Keyboard_String);
+										break;
+									default:
+										len = 0xFF; // ²»Ö§³ÖµÄ×Ö·û´®ÃèÊö·û
+										break;
+								}
+								break;
                         case 15:
                             pDescr = (PUINT8)(&USB_BOSDescriptor[0]);
                             len = sizeof(USB_BOSDescriptor);
